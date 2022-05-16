@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
-{
+{   
+    private PlayerHealth playerHP;
     public PlayerMovement player;
     public Enemy enemyPrefab;
-    public int spawnRange = 14;
+    public float spawnRad = 10 ;
     public int waveNumber = 1;
     public int enemyCount;
-    Vector2 spawnPos;
+    
+    
 
      //Start is called before the first frame update        
     void Start()
     {
         SpawnEnemyWave(waveNumber);
+        playerHP = player.GetComponent<PlayerHealth>();
     }
 
     // Update is called once per frame
@@ -26,14 +29,15 @@ public class SpawnManager : MonoBehaviour
         {
             waveNumber++;
             SpawnEnemyWave(waveNumber);
+
+            playerHP.health.HPregen(5);
         }
     }
 
     private Vector3 GenSpawnPos()
     {
-        int z = Random.Range(-spawnRange, spawnRange);
-        int y = Random.Range(-spawnRange, spawnRange);
-        spawnPos = new Vector2(z, y);
+        Vector2 spawnPos = GameObject.Find("Player").transform.position;
+        spawnPos += Random.insideUnitCircle.normalized * spawnRad;
 
         return spawnPos;
     }
@@ -44,6 +48,12 @@ public class SpawnManager : MonoBehaviour
         for (int i = 0; i < enemiesToSpawn; i++){
             Enemy enemy = Instantiate(enemyPrefab, GenSpawnPos(), Quaternion.identity);
             enemy.SetPlayer(player.transform);
+            enemy.moveSpeed += waveNumber * 0.2f;
+            enemy.dmg += waveNumber;
+            if (enemy.moveSpeed > enemy.maxSpeed)
+            {
+                enemy.moveSpeed = enemy.maxSpeed;
+            }
         }
     }
 }

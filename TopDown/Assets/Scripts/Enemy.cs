@@ -7,9 +7,11 @@ public class Enemy : MonoBehaviour
     public Transform player;
     private Rigidbody2D rb;
     private Vector2 movement;
-
-    private float moveSpeed = 2.0f;
-    // Start is called before the first frame update
+    public float dmg;
+    public float dmgDealingDelay = 3.0f;
+    private float timeToDmg;
+    public float moveSpeed = 2.0f;
+    public float maxSpeed = 8.0f;    // Start is called before the first frame update
     void Start()
     {
         rb = this.GetComponent<Rigidbody2D>();
@@ -23,6 +25,8 @@ public class Enemy : MonoBehaviour
 
         direction.Normalize();
         movement = direction;
+
+        timeToDmg -= Time.deltaTime;
     }
 
     private void FixedUpdate()
@@ -37,5 +41,19 @@ public class Enemy : MonoBehaviour
     public void SetPlayer(Transform target)
     {
         player = target;
+    }
+
+    public void OnCollisionStay2D(Collision2D collision)
+    {
+
+        if (collision.gameObject.TryGetComponent<PlayerHealth>(out PlayerHealth playerHp))
+        {
+            if (timeToDmg <= 0)
+            {
+                playerHp.health.Damage(dmg/2);
+                timeToDmg = dmgDealingDelay;
+                Debug.Log("CoolDown");
+            }
+        }
     }
 }

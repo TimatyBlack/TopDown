@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField]private HealthSystem health;
+    public HealthSystem health;
+    public Enemy enemyPrefab;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,15 +15,16 @@ public class EnemyHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void OnCollisionEnter2D(Collision2D collision)
-    {
-        if(collision.gameObject.TryGetComponent<Bullet>(out Bullet bullet))
-        {
-            Debug.Log("Hit");
-            health.Damage(bullet.dmg);
+    {   
+
+        if (collision.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
+        {   
+            health.Damage(enemy.dmg);
+            
         }
     }
 
@@ -31,6 +33,4 @@ public class EnemyHealth : MonoBehaviour
         health.OnDeath -= Death;
         Destroy(gameObject);
     }
-
-   
 }

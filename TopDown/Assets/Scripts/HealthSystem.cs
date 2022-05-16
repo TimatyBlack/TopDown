@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class HealthSystem : MonoBehaviour
-{
+{  
+    
     public event System.Action OnDeath;
-    public int health;
+    public float health;
     public int healthMax;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +21,7 @@ public class HealthSystem : MonoBehaviour
 
     }
 
-    public void Damage(int dmg)
+    public void Damage(float dmg)
     {
         health -= dmg;
 
@@ -28,7 +30,16 @@ public class HealthSystem : MonoBehaviour
             OnDeath?.Invoke();
             health = 0;
         }
-        
+    }
+
+    public void HPregen(float hpAmount)
+    {
+        health += hpAmount;
+
+        if(health >= healthMax)
+        {
+            health = healthMax;
+        }
     }
 }
  
