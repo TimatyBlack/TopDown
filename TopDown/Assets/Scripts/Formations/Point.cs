@@ -4,13 +4,6 @@ using UnityEngine;
 
 public class Point : MonoBehaviour
 {
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
+    public bool canReachPlayer;
+    public int enemySpawned;
 }

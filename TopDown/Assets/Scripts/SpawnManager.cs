@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
-{   
+{
+    [SerializeField] private BoxPointSpawn _boxSpawnPoint;
     private PlayerHealth playerHP;
     public PlayerMovement player;
     public Enemy enemyPrefab;
@@ -16,7 +17,7 @@ public class SpawnManager : MonoBehaviour
      //Start is called before the first frame update        
     void Start()
     {
-        SpawnEnemyWave(waveNumber);
+        //SpawnEnemyWave(waveNumber);
         playerHP = player.GetComponent<PlayerHealth>();
     }
 
@@ -30,7 +31,7 @@ public class SpawnManager : MonoBehaviour
             waveNumber++;
             SpawnEnemyWave(waveNumber);
 
-            playerHP.health.HPregen(5);
+            //playerHP.health.HPregen(5);
         }
     }
 
@@ -45,8 +46,12 @@ public class SpawnManager : MonoBehaviour
 
     void SpawnEnemyWave(int enemiesToSpawn)
     {
+        List<Point> spawnPoints = _boxSpawnPoint.GetAvailablePoints();
+
         for (int i = 0; i < enemiesToSpawn; i++){
-            Enemy enemy = Instantiate(enemyPrefab, GenSpawnPos(), Quaternion.identity);
+            Point spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count)];
+            spawnPoint.enemySpawned++;
+            Enemy enemy = Instantiate(enemyPrefab, spawnPoint.transform.position , Quaternion.identity);
             enemy.SetPlayer(player.transform);
             enemy.moveSpeed += waveNumber * 0.2f;
             enemy.dmg += waveNumber;
