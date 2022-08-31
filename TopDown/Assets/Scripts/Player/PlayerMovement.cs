@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
+    [SerializeField] private Player _player;
     public float moveSpeed = 5.0f;
+    [SerializeField] private float _accelerate;
 
-    public Rigidbody2D rb;
+    //public Rigidbody2D rb;
     public Collider2D collider;
     public Camera cam;
 
@@ -24,14 +25,26 @@ public class PlayerMovement : MonoBehaviour
     Vector2 movement;
     Vector2 mousePos;
 
+    private void Awake()
+    {
+        _player.input.InputDirection += Move;
+        activeMoveSpeed = moveSpeed;
+    }
+
     // Start is called before the first frame update
 
-    void Start()
+    /*void Start()
     {
         activeMoveSpeed = moveSpeed;
         collider = GetComponent<Collider2D>();
+    }*/
+
+    private void Move(Vector2 direction)
+    {
+        _player.rigidBody.MovePosition(_player.rigidBody.position + direction.normalized * activeMoveSpeed * Time.fixedDeltaTime);
     }
-    void Update()
+
+    /*void Update()
     {
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
@@ -68,7 +81,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    *//*void FixedUpdate()
     {
         //movement
         rb.MovePosition(rb.position + movement.normalized * activeMoveSpeed * Time.fixedDeltaTime);
@@ -76,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
         Vector2 lookDir = mousePos - rb.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
         rb.rotation = angle;
-    }
+    }*//*
 
     void DashCancel()
     {
@@ -94,5 +107,5 @@ public class PlayerMovement : MonoBehaviour
                 DashCancel();
             }
         }
-    }
+    }*/
 }
